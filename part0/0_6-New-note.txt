@@ -1,0 +1,14 @@
+note over browser:
+"Save" button is clicked
+end note
+
+note over browser:
+browser executes the event handler
+that creates a new note, adds it to
+the notes list, rerenders the notes
+list on the page and sends the new
+note to the server
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa\n{content: "123", date: "2020-11-22T12:49:37.694Z"}
+server-->browser: HTTP status code 201 (created)

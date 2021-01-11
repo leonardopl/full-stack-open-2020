@@ -1,0 +1,34 @@
+note over browser:
+"Save" button is clicked
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note\nform data: note=123
+server-->browser: HTTP status code 302 (redirect)\nlocation: /exampleapp/notes
+note over browser:
+
+browser is redirected to
+/exampleapp/notes, reloading
+the page
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{ content: "123", date: "2020-11-22" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
