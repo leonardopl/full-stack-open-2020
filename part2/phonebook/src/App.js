@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Filter = ({ filterName, setFilter }) => {
   const handleFilterChange = (event) => {
@@ -31,7 +32,7 @@ const PersonForm = ( {persons, setPersons} ) => {
 
     if (!persons.some(person => person.name === newName))
     {
-      setPersons(persons.concat( {name: newName, number: newNumber} ))
+      setPersons(persons.concat( {name: newName, number: newNumber, id: persons.length + 1} ))
       setNewName('')
       setNewNumber('')
     }
@@ -63,7 +64,7 @@ const Persons = ( {persons} ) => {
   return (
     <>
       {persons.map(person => 
-          <Person key={person.name} person={person} />
+          <Person key={person.id} person={person} />
       )}
     </>
   )
@@ -72,14 +73,19 @@ const Persons = ( {persons} ) => {
 const Person = ( {person} ) => <div>{person.name} {person.number}</div>
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [ persons, setPersons ] = useState([])
 
   const [ filterName, setFilter ] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
 
   const personsToDisplay = filterName === ''
     ? persons
