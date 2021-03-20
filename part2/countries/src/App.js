@@ -41,7 +41,29 @@ const Countries = ( {countries} ) => {
   }
 }
 
-const CountryName = ( {country} ) => <div>{country.name}</div>
+const CountryName = ( {country} ) => {
+  const [ showDetails, setShowDetails ] = useState(false)
+
+  const handleClick = () => {
+    setShowDetails(!showDetails)
+  }
+
+  if (!showDetails) {
+    return (
+      <div>
+        {country.name} <button onClick={handleClick}>Show</button>
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>
+        {country.name} <button onClick={handleClick}>Hide</button>
+        <CountryDetailedInfo key={country.alpha3Code} country={country}/>
+      </div>
+    )
+  }
+}
 
 const CountryDetailedInfo = ( {country} ) => {
   return (
@@ -61,7 +83,6 @@ const CountryDetailedInfo = ( {country} ) => {
     </>
   )
 }
-
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
