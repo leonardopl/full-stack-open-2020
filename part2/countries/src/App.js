@@ -60,12 +60,29 @@ const CountryName = ( {country} ) => {
       <div>
         {country.name} <button onClick={handleClick}>Hide</button>
         <CountryDetailedInfo key={country.alpha3Code} country={country}/>
+        <br/>
       </div>
     )
   }
 }
 
 const CountryDetailedInfo = ( {country} ) => {
+  const api_key = process.env.REACT_APP_API_KEY
+
+  const [ weatherInfo, setWeatherInfo ] = useState([]); 
+
+  useEffect(() => {
+    console.log('weather effect')
+    axios
+      .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
+      .then(response => {
+        console.log('weather promise fulfilled', response.data)
+        setWeatherInfo(response.data)
+      })
+  }, [api_key, country.capital])
+
+  console.log('weatherInfo array', weatherInfo)
+
   return (
     <>
       <h1>{country.name}</h1>
@@ -80,6 +97,17 @@ const CountryDetailedInfo = ( {country} ) => {
       </ul>
 
       <img src={country.flag} alt={`${country.name}'s flag`} height="100"/>
+
+      {
+        (weatherInfo.length !== 0)
+        ? <div>
+            <h2>Weather in {country.capital}</h2>
+            <p><b>Temperature:</b> {weatherInfo.current.temperature} ºC</p>
+            <img src={weatherInfo.current.weather_icons[0]} alt={`${weatherInfo.current.weather_descriptions}`} />
+            <p><b>Wind:</b> {weatherInfo.current.wind_speed} mph direction {weatherInfo.current.wind_dir}</p>
+          </div>
+        : <p>No weather information available at the moment.</p>
+      }
     </>
   )
 }
